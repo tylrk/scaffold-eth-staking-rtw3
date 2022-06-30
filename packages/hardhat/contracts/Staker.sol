@@ -11,7 +11,7 @@ contract Staker {
   mapping(address => uint256) public balances;
   mapping(address => uint256) public depositTimestamps;
 
-  uint256 public constant rewardRatePerBlock = 0.1 ether;
+  uint256 public constant rewardRatePerSecond = 0.1 ether;
   uint256 public withdrawalDeadline = block.timestamp + 120 seconds;
   uint256 public claimDeadline = block.timestamp + 240 seconds;
   uint256 public currentBlock = 0;
@@ -69,7 +69,7 @@ contract Staker {
   function withdraw() public withdrawalDeadlineReached(true) claimDeadlineReached(false) notCompleted {
     require(balances[msg.sender] > 0, "You have no balance to withdraw!");
     uint256 individualBalance = balances[msg.sender];
-    uint256 indBalanceRewards = individualBalance + ((block.timestamp-depositTimestamps[msg.sender]) * rewardRatePerBlock);
+    uint256 indBalanceRewards = individualBalance + ((block.timestamp-depositTimestamps[msg.sender]) * rewardRatePerSecond);
     balances[msg.sender] = 0;
 
     // Transfer all ETH via call! (not transfer) cc: https://solidity-by-example.org/sending-ether
